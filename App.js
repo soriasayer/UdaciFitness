@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native'
+import { View, Platform, StatusBar } from 'react-native'
 import AddEntry from './components/AddEntry'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -9,8 +9,18 @@ import { createAppContainer } from 'react-navigation'
 import { createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation-tabs'
 import { puple, white, purple } from './utiles/colors'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
+import Constants from "expo-constants"
+import { createStackNavigator } from 'react-navigation-stack'
+import EntryDetail from './components/EntryDetail'
 
-const _TabNavigator = Platform.OS === 'ios' ? createBottomTabNavigator : createMaterialTopTabNavigator
+function UdaciStatusBar ({ backgroundColor, ...props }) {
+  return(
+    <View style={{ backgroundColor, height: Constants.statusBarHeight}}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    </View>
+  )
+}
+const _TabNavigator = Platform.OS === 'ios' ? createBottomTabNavigator : createBottomTabNavigator
 
 const TabNavigator = _TabNavigator({
   History: {
@@ -47,13 +57,28 @@ const TabNavigator = _TabNavigator({
   }
 })
 
-const NavTabs = createAppContainer(TabNavigator)
+const MainNavigator = createStackNavigator({
+  Home: {
+    screen: TabNavigator,
+  },
+  EntryDetail: {
+    screen: EntryDetail,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      }
+    }
+  }
+})
+
+const NavTabs = createAppContainer(MainNavigator)
 
 export default function App() {
   return (
     <Provider store={createStore(reducer)}>
       <View style={{flex: 1}} accessible >
-        <View style={{height: 20}} />
+        <UdaciStatusBar backgroundColor={purple} barStyle="light-content" />
         <NavTabs />
       </View>
     </Provider>
