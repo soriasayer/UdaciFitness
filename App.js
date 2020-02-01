@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Platform, StatusBar } from 'react-native'
 import AddEntry from './components/AddEntry'
 import { createStore } from 'redux'
@@ -13,6 +13,7 @@ import Constants from "expo-constants"
 import { createStackNavigator } from 'react-navigation-stack'
 import EntryDetail from './components/EntryDetail'
 import Live from './components/Live'
+import { setLocalNotification } from './utiles/helpers'
 
 function UdaciStatusBar ({ backgroundColor, ...props }) {
   return(
@@ -82,15 +83,22 @@ const MainNavigator = createStackNavigator({
 
 const NavTabs = createAppContainer(MainNavigator)
 
-export default function App() {
-  return (
-    <Provider store={createStore(reducer)}>
-      <View style={{flex: 1}} accessible >
-        <UdaciStatusBar backgroundColor={purple} barStyle="light-content" />
-        <NavTabs />
-      </View>
-    </Provider>
-  );
+export default class App extends Component {
+  componentDidMount = () => {
+    setLocalNotification()
+  }
+  
+  render() {
+    return (
+      <Provider store={createStore(reducer)}>
+        <View style={{flex: 1}} accessible >
+          <UdaciStatusBar backgroundColor={purple} barStyle="light-content" />
+          <NavTabs />
+        </View>
+      </Provider>
+    );
+  }
+  
 }
 
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native'
-import { getMetricMetaInfo, timeToString, getDailyReminderValue } from '../utiles/helpers'
+import { getMetricMetaInfo, timeToString, getDailyReminderValue, clearLocalNotification, setLocalNotification } from '../utiles/helpers'
 import UdaceSlider from './UdaciSlider'
 import UdaciStepper from './UdaciStepper'
 import DateHeader from './DateHeader'
@@ -82,6 +82,10 @@ function SubmitBtn({onPress}) {
         
         // save to 'DB'
         submitEntry({ key, entry })
+        // clear Notification
+
+        clearLocalNotification()
+            .then(setLocalNotification)
     }
 
     reset = () => {
